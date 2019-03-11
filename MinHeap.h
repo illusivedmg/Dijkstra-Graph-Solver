@@ -5,6 +5,7 @@
 #include <iostream>
 #include <cmath>
 
+
 struct Node {
   Node(int lab, int k)
   : mLabel(lab), mKey(k) {}
@@ -22,21 +23,21 @@ public:
   ~MinHeap();
 
   // |i|
-  int numElements();
+  int numElements() { return mHeap.size()-1; };
+
+  int top() { return mHeap[1]->mLabel; };
+
+  bool isEmpty() { return numElements() == 0; };
 
   // i^-1(x) => get index in position vector of label
-  int getPosIndex(int labeltofind);
+  int getPositionIndexOfLabel(int labeltofind); 
 
-  bool exists(int labeltofind);
-  
+  // swap and update in Pos vector
+  void swapPositions(int indexL, int indexR);
+
   // prints contents of vectors
   void displayHeap();
   void displayPositions();
-
-  // returns top label
-  int top();
-  
-  bool isEmpty();
 
   // compare parent with child, swap if parent bigger
   void bubbleUp(int i);
@@ -48,20 +49,22 @@ public:
   void siftDown(int i);
 
   void insert(Node* x);
-  
+
   void makeHeap(const std::vector<Node*> &S);
-  
+
   // swaps and pops first/last in heap, swap/nullify in pos vector
   int deleteMin();
 
 private:
-  int Parent(int i);
-  int Left(int i);
-  int Right(int i);
+  int Parent(int i) { return floor(i/2); };
+
+  int Left(int i) { return (2*i); };
+
+  int Right(int i) { return (2*i+1); };
 
   // key = value to minimize
   std::vector<Node*> mHeap;
 
   // key = tree index/position
-  std::vector<Node*> mPositions; 
+  std::vector<Node*> mPositions;
 };

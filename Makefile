@@ -1,10 +1,11 @@
 CXX := clang++
 CXXFLAGS := -std=c++11 -Wall -Werror
+OBJ := main.o Dijkstra.o MinHeap.o
 
 all: main
 
-debug: main.o MinHeap.o
-	$(CXX) main.o MinHeap.o -o debug
+debug: $(OBJ)
+	$(CXX) $(OBJ) -o debug
 	$(CXX) $(CXXFLAGS) -g -o $@ $^
 	valgrind --leak-check=full ./debug 13
 
@@ -17,14 +18,19 @@ run: main
 big: main
 	./main 27
 
-main: main.o MinHeap.o
-	$(CXX) main.o MinHeap.o -o main
+main: $(OBJ)
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
-binaryMinHeap.o: MinHeap.cpp MinHeap.h
-main.o: main.cpp MinHeap.h
+main.o: main.cpp Dijkstra.h MinHeap.h
+	$(CXX) $(CXXFLAGS) -c main.cpp
+
+MinHeap.o: MinHeap.cpp MinHeap.h
+	$(CXX) $(CXXFLAGS) -c MinHeap.cpp
+
+Dijkstra.o: Dijkstra.cpp Dijkstra.h MinHeap.h
+	$(CXX) $(CXXFLAGS) -c Dijkstra.cpp
 
 clean:
-	rm -f ./main
-	rm -f ./debug
+	rm -f main
+	rm -f debug
 	rm -f *.o
